@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crocha – Navbar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: rgb(126, 235, 87);
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --dur: 0.9s;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: #6b6b6b;   /* grey so the glass pill is visible */
+      min-height: 300vh;
+    }
+
+    /* ═══════════════════════════════════════════
+       THE PILL — glass in both states,
+       only width + position animate
+    ═══════════════════════════════════════════ */
+    .navbar {
+      position: fixed;
+      top: 12px;
+      left: calc(50% - 475.5px);   /* centre the 951px pill */
+      width: 951px;
+      height: 51px;
+      z-index: 100;
+
+      /* layout */
+      display: flex;
+      align-items: center;
+      padding: 8px 24px;
+
+      /* glass — same in both states */
+      border-radius: 100px;
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+
+      /* only morph width + position */
+      transition:
+        left  var(--dur) var(--ease),
+        width var(--dur) var(--ease);
+    }
+
+    /* ─── COMPACT ─── */
+    .navbar.is-compact {
+      left:  calc(50% - 149.5px);   /* centre the 299px pill */
+      width: 299px;
+    }
+
+    /* ═══════════════════════════════════════════
+       LOGO
+    ═══════════════════════════════════════════ */
+    .navbar__logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 100px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: block;
+    }
+    .navbar__logo img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+
+    /* ═══════════════════════════════════════════
+       RIGHT SIDE — absolutely flush to pill's
+       right padding, so gap follows pill width
+    ═══════════════════════════════════════════ */
+    .navbar__right {
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Full menu and compact status overlap here */
+    .navbar__menu,
+    .navbar__status {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    /* ── Full menu ── */
+    .navbar__menu {
+      gap: 96px;
+      list-style: none;
+      /* visible by default, fades fast on scroll */
+      opacity: 1;
+      pointer-events: all;
+      transition: opacity 0.18s ease;
+    }
+
+    .navbar.is-compact .navbar__menu {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ── Compact status ── */
+    .navbar__status {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      align-items: center;
+      gap: 6px;
+      /* hidden, fades in only after pill has shrunk */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar.is-compact .navbar__status {
+      opacity: 1;
+      pointer-events: all;
+      transition: opacity 0.22s ease calc(var(--dur) * 0.6);
+    }
+
+    /* ═══════════════════════════════════════════
+       TABS
+    ═══════════════════════════════════════════ */
+    .nav-tab {
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+      text-decoration: none;
+    }
+
+    .nav-tab__label {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 21.856px;
+      color: rgba(102, 102, 102, 1);
+      transition: color 0.3s ease-in-out;
+      white-space: nowrap;
+    }
+
+    .nav-tab__num {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 200;
+      font-size: 10px;
+      line-height: 10px;
+      color: #000;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover .nav-tab__label { color: #000; }
+
+    /* ═══════════════════════════════════════════
+       COMPACT STATUS TEXT
+    ═══════════════════════════════════════════ */
+    .status__text {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 21.856px;
+      color: rgba(102, 102, 102, 1);
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════════
+       PULSING GREEN DOT
+    ═══════════════════════════════════════════ */
+    .dot {
+      position: relative;
+      width: 12px; height: 12px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dot__core {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      position: relative;
+      z-index: 1;
+    }
+    .dot__ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: 0.5;
+      animation: pulse 1.55s ease-out infinite;
+    }
+    @keyframes pulse {
+      0%   { transform: scale(0.5); opacity: 0.55; }
+      70%  { transform: scale(2.5); opacity: 0;    }
+      100% { transform: scale(2.5); opacity: 0;    }
+    }
+
+    /* ═══════════════════════════════════════════
+       DEMO PAGE
+    ═══════════════════════════════════════════ */
+    .hero {
+      padding: 100px 80px 0;
+      color: #fff;
+    }
+    .hero h1 {
+      font-weight: 300;
+      font-size: 72px;
+      line-height: 1.08;
+      margin-bottom: 24px;
+    }
+    .hero p {
+      font-weight: 300;
+      font-size: 16px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 440px;
+      margin-bottom: 56px;
+    }
+    .hero .hint {
+      font-weight: 200;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+
+    <a href="/" class="navbar__logo">
+      <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1f2181cf-64bc-4f51-afeb-49fe25a14a61" alt="Carolina Rocha">
+    </a>
+
+    <div class="navbar__right">
+
+      <!-- Full menu (default state) -->
+      <ul class="navbar__menu">
+        <li><a href="#about"     class="nav-tab"><span class="nav-tab__label">ABOUT</span><span class="nav-tab__num">01</span></a></li>
+        <li><a href="#portfolio" class="nav-tab"><span class="nav-tab__label">PORTFOLIO</span><span class="nav-tab__num">02</span></a></li>
+        <li><a href="#services"  class="nav-tab"><span class="nav-tab__label">SERVICES</span><span class="nav-tab__num">03</span></a></li>
+        <li><a href="#contact"   class="nav-tab"><span class="nav-tab__label">CONTACT</span><span class="nav-tab__num">04</span></a></li>
+      </ul>
+
+      <!-- Compact status (scrolled) -->
+      <div class="navbar__status">
+        <span class="status__text">AVAILABLE FOR WORK</span>
+        <div class="dot" aria-hidden="true">
+          <span class="dot__ring"></span>
+          <span class="dot__core"></span>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <main class="hero">
+    <h1>Carolina<br>Rocha.</h1>
+    <p>Scroll down to watch the pill morph from 951px to 299px — glass stays, only the size changes.</p>
+    <span class="hint">↓ SCROLL</span>
+  </main>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('is-compact', window.scrollY > 20);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

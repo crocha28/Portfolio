@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crocha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --grey:  #858585;
+      --green: rgb(126, 235, 87);
+      --ease:  cubic-bezier(0.4, 0, 0.2, 1);
+      --dur:   0.9s;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Manrope', sans-serif;
+      background: var(--grey);
+      overflow-x: hidden;
+    }
+
+    /* Propagate Manrope to every element (overrides browser UA fonts on inputs etc.) */
+    * { font-family: inherit; }
+
+    /* ════════════════════════════════════════
+       NAVBAR
+    ════════════════════════════════════════ */
+    .navbar {
+      position: fixed;
+      top: 12px;
+      left: calc(50% - 475.5px);
+      width: 951px;
+      height: 51px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 8px 24px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      transition: left var(--dur) var(--ease), width var(--dur) var(--ease);
+    }
+    .navbar.is-compact {
+      left:  calc(50% - 149.5px);
+      width: 299px;
+    }
+
+    .navbar__logo {
+      width: 32px; height: 32px;
+      border-radius: 100px;
+      overflow: hidden;
+      flex-shrink: 0; display: block;
+    }
+    .navbar__logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .navbar__right {
+      position: absolute;
+      right: 24px; top: 50%;
+      transform: translateY(-50%);
+    }
+    .navbar__menu, .navbar__status {
+      display: flex; align-items: flex-start;
+    }
+    .navbar__menu {
+      gap: 96px; list-style: none;
+      opacity: 1; pointer-events: all;
+      transition: opacity 0.18s ease;
+    }
+    .navbar.is-compact .navbar__menu { opacity: 0; pointer-events: none; }
+
+    .navbar__status {
+      position: absolute; right: 0; top: 50%;
+      transform: translateY(-50%);
+      align-items: center; gap: 6px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .navbar.is-compact .navbar__status {
+      opacity: 1; pointer-events: all;
+      transition: opacity 0.22s ease calc(var(--dur) * 0.6);
+    }
+
+    .nav-tab { display: flex; align-items: flex-start; gap: 4px; text-decoration: none; }
+    .nav-tab__label {
+      font-weight: 300;
+      font-size: 16px; line-height: 21.856px;
+      color: rgba(102,102,102,1); transition: color 0.3s ease-in-out; white-space: nowrap;
+    }
+    .nav-tab__num {
+      font-weight: 200;
+      font-size: 10px; line-height: 10px; color: #000; white-space: nowrap;
+    }
+    .nav-tab:hover .nav-tab__label { color: #000; }
+
+    .status__text {
+      font-weight: 300;
+      font-size: 16px; line-height: 21.856px; color: rgba(102,102,102,1); white-space: nowrap;
+    }
+    .dot { position: relative; width: 12px; height: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .dot__core { width: 6px; height: 6px; border-radius: 50%; background: var(--green); position: relative; z-index: 1; }
+    .dot__ring  { position: absolute; inset: 0; border-radius: 50%; background: var(--green); opacity: 0.5; animation: pulse 1.55s ease-out infinite; }
+    @keyframes pulse {
+      0%  { transform: scale(0.5); opacity: 0.55; }
+      70% { transform: scale(2.5); opacity: 0; }
+      100%{ transform: scale(2.5); opacity: 0; }
+    }
+
+    /* ════════════════════════════════════════
+       HERO  — 1440 × 900 reference canvas
+    ════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100svh;   /* always fills the viewport, any device */
+      min-height: 500px;
+      background: var(--grey);
+      overflow: hidden;
+    }
+
+    /* helper: position elements as % of 1440 × 900 */
+    .hero > * { position: absolute; }
+
+    /* ── "CROCHA" — background title, always edge-to-edge ── */
+    .hero__title {
+      left: 0;
+      top: 9.4%;   /* 85/900 */
+      font-weight: 600;
+      font-size: 10px;   /* overridden by JS after font loads */
+      line-height: 1;
+      color: rgba(255,255,255,1);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ── Card ── */
+    .hero__card {
+      left:    58.96%;  /* 849/1440 */
+      top:     47.89%;  /* 431/900  */
+      width:   fit-content;
+      height:  fit-content;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .card__label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 12px; font-weight: 300; color: #000;
+      letter-spacing: 0.04em; margin-bottom: 16px;
+    }
+    .card__role  { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 500; color: #000; line-height: 1.35; }
+    .card__place { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 300; color: #000; margin-top: 8px; }
+
+    .card__divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 16px 0;
+    }
+    .card__exp    { display: flex; align-items: baseline; gap: 4px; }
+    .exp__num     { font-family: 'Manrope', sans-serif; font-size: 32px; font-weight: 500; color: #000; line-height: 1; }
+    .exp__label   { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 300; color: #000; line-height: 1; align-self: flex-end; padding-bottom: 4px; }
+
+    /* ── "Create for [ticker]" ── */
+    .hero__tagline {
+      left: 4.44%;  /* 64/1440  */
+      top:  66.2%;  /* 596/900  */
+    }
+
+    .tagline__line {
+      display: block;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 400;
+      font-size: clamp(40px, 8.89vw, 128px);
+      line-height: 1;
+      color: #000;
+    }
+
+    /* second line: "for" + animated ticker inline */
+    .tagline__line--row {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.18em;
+    }
+
+    /* clip window — height == one word == font-size so text aligns with "for" */
+    .tagline__ticker {
+      height: clamp(40px, 8.89vw, 128px);
+      overflow: hidden;
+    }
+
+    /* scrolling inner list — 5 items (4 words + 1 duplicate for seamless loop) */
+    .tagline__ticker-inner {
+      display: flex;
+      flex-direction: column;
+      animation: ticker 12s linear infinite;
+    }
+
+    .tagline__ticker-inner span {
+      display: block;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 400;
+      font-size: clamp(40px, 8.89vw, 128px);
+      line-height: 1;
+      color: #000;
+      /* height auto = font-size × 1 → same as clip window */
+    }
+
+    /*
+      5 spans: word1, word2, word3, word4, word1-duplicate
+      Each span = 20% of total inner height (1/5)
+      Hold 2.4 s (20%), slide 0.6 s (5%) per word → 25% per cycle × 4 = 100%
+      Slide easing set per-keyframe with cubic-bezier for smoothness.
+    */
+    @keyframes ticker {
+      0%   { transform: translateY(0%);   animation-timing-function: linear; }
+      20%  { transform: translateY(0%);   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+      25%  { transform: translateY(-20%); animation-timing-function: linear; }
+      45%  { transform: translateY(-20%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+      50%  { transform: translateY(-40%); animation-timing-function: linear; }
+      70%  { transform: translateY(-40%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+      75%  { transform: translateY(-60%); animation-timing-function: linear; }
+      95%  { transform: translateY(-60%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+      100% { transform: translateY(-80%); }   /* lands on word1 duplicate → seamless */
+    }
+
+    /* ── Body text + CTA ── */
+    .hero__cta {
+      left:  73.6%;   /* 1060/1440 */
+      top:   79.7%;   /* 717/900   */
+      width: 21.9%;   /* 316/1440  */
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .cta__text {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 200;
+      font-size: 16px;
+      line-height: 1.55;
+      color: #000;
+    }
+
+    .cta__button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* text pill */
+    .btn__pill {
+      height: 41px;
+      padding: 8px 40px;
+      background: #ffffff;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn__pill span {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 300;
+      font-size: 18px;
+      color: rgba(102,102,102,1);
+      white-space: nowrap;
+    }
+
+    /* arrow circle */
+    .btn__arrow {
+      width: 38px; height: 38px;
+      border-radius: 100px;
+      background: #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .btn__arrow svg {
+      width: 16px; height: 16px;
+    }
+
+    /* ─── hover state ─── */
+    .cta__button:hover .btn__pill span { color: #000; }
+    .cta__button:hover .btn__arrow { background: #000; }
+    .cta__button:hover .btn__arrow svg path { stroke: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="navbar__logo">
+      <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1f2181cf-64bc-4f51-afeb-49fe25a14a61" alt="Carolina Rocha">
+    </a>
+    <div class="navbar__right">
+      <ul class="navbar__menu">
+        <li><a href="#about"     class="nav-tab"><span class="nav-tab__label">ABOUT</span><span class="nav-tab__num">01</span></a></li>
+        <li><a href="#portfolio" class="nav-tab"><span class="nav-tab__label">PORTFOLIO</span><span class="nav-tab__num">02</span></a></li>
+        <li><a href="#services"  class="nav-tab"><span class="nav-tab__label">SERVICES</span><span class="nav-tab__num">03</span></a></li>
+        <li><a href="#contact"   class="nav-tab"><span class="nav-tab__label">CONTACT</span><span class="nav-tab__num">04</span></a></li>
+      </ul>
+      <div class="navbar__status">
+        <span class="status__text">AVAILABLE FOR WORK</span>
+        <div class="dot" aria-hidden="true">
+          <span class="dot__ring"></span>
+          <span class="dot__core"></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+
+    <!-- Background title -->
+    <h1 class="hero__title">CROCHA</h1>
+
+    <!-- Info card -->
+    <div class="hero__card">
+      <span class="card__label">CURRENTLY</span>
+      <p class="card__role">Graphic & UX/UI Designer</p>
+      <p class="card__place">Lisbon, Portugal</p>
+      <hr class="card__divider">
+      <div class="card__exp">
+        <span class="exp__num">2</span>
+        <span class="exp__label">YRS EXP</span>
+      </div>
+    </div>
+
+    <!-- "Create for [ticker]" -->
+    <div class="hero__tagline">
+      <span class="tagline__line">Create</span>
+      <span class="tagline__line tagline__line--row">
+        <span>for</span>
+        <div class="tagline__ticker">
+          <div class="tagline__ticker-inner">
+            <span>Brands</span>
+            <span>Startups</span>
+            <span>People</span>
+            <span>Projects</span>
+            <span>Brands</span><!-- duplicate of word 1 → seamless loop -->
+          </div>
+        </div>
+      </span>
+    </div>
+
+    <!-- Body text + button -->
+    <div class="hero__cta">
+      <p class="cta__text">Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio</p>
+      <a href="#portfolio" class="cta__button">
+        <div class="btn__pill">
+          <span>BUTTON</span>
+        </div>
+        <div class="btn__arrow">
+          <!-- north-east arrow  -->
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.5 12.5L12.5 3.5M12.5 3.5H6M12.5 3.5V10" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+
+  </section>
+
+  <script>
+    // ── Navbar scroll ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('is-compact', window.scrollY > 20);
+    }, { passive: true });
+
+    // ── CROCHA full-width fit ──
+    const title = document.querySelector('.hero__title');
+    const hero  = document.querySelector('.hero');
+
+    function fitCrocha() {
+      title.style.fontSize = '100px';
+      title.style.width = 'max-content'; // force true text width, not container width
+      const naturalWidth = title.getBoundingClientRect().width;
+      title.style.width = '';
+      title.style.fontSize = (100 * hero.clientWidth / naturalWidth) + 'px';
+    }
+
+    // Wait for Manrope to load before measuring — crucial for accuracy
+    document.fonts.ready.then(() => {
+      fitCrocha();
+    });
+
+    window.addEventListener('resize', fitCrocha, { passive: true });
+  </script>
+
+</body>
+</html>
