@@ -295,6 +295,158 @@
     .cta__button:hover .btn__arrow svg path { stroke: #fff; }
 
     /* ════════════════════════════════════════
+       SERVICES SECTION
+    ════════════════════════════════════════ */
+    #services {
+      background: #1c1c1c;
+      padding-bottom: 64px;
+    }
+
+    /* header */
+    .services__header {
+      padding-top: 64px;
+    }
+    .services__divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.25);
+      margin: 0 64px 21px;
+    }
+    .services__meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 64px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+
+    /* list */
+    .services__list {
+      margin-top: 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* single row */
+    .service {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 0 64px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+    }
+
+    /* left: number + thumbnail */
+    .service__left {
+      display: flex;
+      align-items: flex-start;
+      gap: 40px;
+      flex-shrink: 0;
+      padding-top: 24px;
+    }
+    .service__num {
+      font-size: 20px;
+      font-weight: 400;
+      color: #fff;
+      line-height: 1;
+      min-width: 24px;
+    }
+    .service__thumb {
+      width: 152px;
+      height: 100px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.12);
+      flex-shrink: 0;
+      transition: width  0.3s cubic-bezier(0.4,0,0.2,1),
+                  height 0.3s cubic-bezier(0.4,0,0.2,1),
+                  border-radius 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .service:hover .service__thumb {
+      width: 455px;
+      height: 300px;
+      border-radius: 24px;
+    }
+
+    /* expandable middle — grid trick for smooth height reveal */
+    .service__expand {
+      flex: 1;
+      margin: 0 48px;
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.3s cubic-bezier(0.4,0,0.2,1),
+                  padding         0.3s cubic-bezier(0.4,0,0.2,1);
+      padding: 0;
+      align-self: stretch;
+    }
+    /* grid item — overflow:hidden + NO padding so grid can collapse to 0 */
+    .service__expand-clip {
+      overflow: hidden;
+    }
+    /* actual content — padding lives here, not on the grid item */
+    .service__expand-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 24px 0;
+    }
+    .service:hover .service__expand {
+      grid-template-rows: 1fr;
+    }
+
+    .service__title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .service__name {
+      font-size: 32px;
+      font-weight: 400;
+      color: #fff;
+      line-height: 1;
+    }
+    .service__sub {
+      font-size: 18px;
+      font-weight: 400;
+      color: #fff;
+      opacity: 0.6;
+    }
+    .service__desc {
+      font-size: 18px;
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.5;
+      opacity: 0.8;
+    }
+    .service__tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .service__tag {
+      font-size: 10px;
+      font-weight: 300;
+      color: #fff;
+      background: rgba(255,255,255,0.2);
+      border-radius: 100px;
+      padding: 8px 24px;
+      letter-spacing: 0.04em;
+    }
+
+    /* right arrow — vertically centred to thumb */
+    .service__arrow {
+      flex-shrink: 0;
+      margin-top: 31px; /* (100px thumb - 38px arrow) / 2 */
+      transition: margin-top 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .service:hover .service__arrow {
+      margin-top: 131px; /* (300px thumb - 38px arrow) / 2 */
+    }
+
+    /* ════════════════════════════════════════
        PORTFOLIO SECTION  — white
     ════════════════════════════════════════ */
     .portfolio {
@@ -750,6 +902,111 @@
 
     </div>
 
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       SERVICES SECTION
+  ═══════════════════════════════════════ -->
+  <section id="services">
+
+    <!-- header: divider + meta -->
+    <div class="services__header">
+      <hr class="services__divider">
+      <div class="services__meta">
+        <span>03</span>
+        <span>SERVICES</span>
+        <span>2026</span>
+      </div>
+    </div>
+
+    <!-- service rows -->
+    <div class="services__list">
+
+      <!-- Row 1 -->
+      <div class="service">
+        <div class="service__left">
+          <span class="service__num">01</span>
+          <div class="service__thumb"></div>
+        </div>
+        <div class="service__expand">
+          <div class="service__expand-clip">
+          <div class="service__expand-inner">
+            <div class="service__title-block">
+              <p class="service__name">SERVICE</p>
+              <p class="service__sub">Lorem Ipsum</p>
+            </div>
+            <p class="service__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus.</p>
+            <div class="service__tags">
+              <span class="service__tag">TAG</span>
+              <span class="service__tag">TAG</span>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="btn__arrow service__arrow">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.5 12.5L12.5 3.5M12.5 3.5H6M12.5 3.5V10" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="service">
+        <div class="service__left">
+          <span class="service__num">02</span>
+          <div class="service__thumb"></div>
+        </div>
+        <div class="service__expand">
+          <div class="service__expand-clip">
+          <div class="service__expand-inner">
+            <div class="service__title-block">
+              <p class="service__name">SERVICE</p>
+              <p class="service__sub">Lorem Ipsum</p>
+            </div>
+            <p class="service__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus.</p>
+            <div class="service__tags">
+              <span class="service__tag">TAG</span>
+              <span class="service__tag">TAG</span>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="btn__arrow service__arrow">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.5 12.5L12.5 3.5M12.5 3.5H6M12.5 3.5V10" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="service">
+        <div class="service__left">
+          <span class="service__num">03</span>
+          <div class="service__thumb"></div>
+        </div>
+        <div class="service__expand">
+          <div class="service__expand-clip">
+          <div class="service__expand-inner">
+            <div class="service__title-block">
+              <p class="service__name">SERVICE</p>
+              <p class="service__sub">Lorem Ipsum</p>
+            </div>
+            <p class="service__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus.</p>
+            <div class="service__tags">
+              <span class="service__tag">TAG</span>
+              <span class="service__tag">TAG</span>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="btn__arrow service__arrow">
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.5 12.5L12.5 3.5M12.5 3.5H6M12.5 3.5V10" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
   </section>
 
   <script>
