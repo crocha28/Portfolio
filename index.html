@@ -327,7 +327,7 @@
       margin-top: 96px;
       display: flex;
       flex-direction: column;
-      gap: 0;
+      gap: 64px;
     }
 
     /* single row */
@@ -336,7 +336,6 @@
       align-items: flex-start;
       justify-content: space-between;
       padding: 0 64px;
-      border-top: 1px solid rgba(255,255,255,0.15);
       cursor: pointer;
     }
 
@@ -362,13 +361,11 @@
       background: rgba(255,255,255,0.12);
       flex-shrink: 0;
       transition: width  0.3s cubic-bezier(0.4,0,0.2,1),
-                  height 0.3s cubic-bezier(0.4,0,0.2,1),
-                  border-radius 0.3s cubic-bezier(0.4,0,0.2,1);
+                  height 0.3s cubic-bezier(0.4,0,0.2,1);
     }
     .service.is-open .service__thumb {
       width: 455px;
       height: 300px;
-      border-radius: 24px;
     }
 
     /* expandable middle — grid trick for smooth height reveal */
@@ -436,14 +433,10 @@
       letter-spacing: 0.04em;
     }
 
-    /* right arrow — vertically centred to thumb */
+    /* right arrow — aligned to top of content */
     .service__arrow {
       flex-shrink: 0;
-      margin-top: 31px; /* (100px thumb - 38px arrow) / 2 */
-      transition: margin-top 0.3s cubic-bezier(0.4,0,0.2,1);
-    }
-    .service.is-open .service__arrow {
-      margin-top: 131px; /* (300px thumb - 38px arrow) / 2 */
+      margin-top: 24px;
     }
 
     /* ════════════════════════════════════════
@@ -1062,18 +1055,26 @@
         });
       }
 
-      // ── Services accordion — opens on scroll ──
+      // ── Services accordion — opens after delay on scroll ──
+    const serviceTimers = new Map();
+
     const serviceObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-open');
+          // wait 1.5s before expanding
+          const t = setTimeout(() => {
+            entry.target.classList.add('is-open');
+          }, 1500);
+          serviceTimers.set(entry.target, t);
         } else {
-          // collapse again when scrolled past
+          // cancel pending open and collapse
+          clearTimeout(serviceTimers.get(entry.target));
+          serviceTimers.delete(entry.target);
           entry.target.classList.remove('is-open');
         }
       });
     }, {
-      threshold: 0.35  // triggers when 35% of the row is visible
+      threshold: 0.35
     });
 
     document.querySelectorAll('.service').forEach(s => serviceObserver.observe(s));
