@@ -538,36 +538,15 @@
       font-size: clamp(24px, 3.89vw, 56px);
       color: #fff;
       text-align: right;
-      line-height: 1.3;
+      line-height: 1.4;
     }
 
-    /* ── Fade-in to Bold on Scroll ── */
-    @keyframes fade-to-bold {
-      from { opacity: 0; font-weight: 200; }
-      to   { opacity: 1; font-weight: 600; }
-    }
-
-    /* Modern browsers: CSS Scroll-Driven Animation (Chrome 115+, Firefox 110+, Safari 18+) */
-    @supports (animation-timeline: view()) {
-      .preview__headline {
-        animation: fade-to-bold linear both;
-        animation-timeline: view();
-        animation-range: entry 10% cover 55%;
-      }
-    }
-
-    /* Fallback for Safari / older browsers: class-triggered CSS animation */
-    @supports not (animation-timeline: view()) {
-      .preview__headline {
-        opacity: 0;
-        font-weight: 200;
-        transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1),
-                    font-weight 0.9s cubic-bezier(0.4,0,0.2,1);
-      }
-      .preview__headline.in-view {
-        opacity: 1;
-        font-weight: 600;
-      }
+    /* Each word is individually driven by scroll */
+    .preview__headline .word {
+      display: inline;
+      opacity: 0.15;
+      font-weight: 200;
+      will-change: opacity, font-weight;
     }
 
     /* Bottom-right block: body text + button */
@@ -803,19 +782,37 @@
 
     window.addEventListener('resize', fitCrocha, { passive: true });
 
-    // ── Headline: Fade-In to Bold — IntersectionObserver fallback for Safari ──
-    // CSS Scroll-Driven Animation handles modern browsers automatically.
-    // This fallback fires for browsers that don't support animation-timeline.
-    if (!CSS.supports('animation-timeline: view()')) {
-      const headline = document.querySelector('.preview__headline');
-      const obs = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          headline.classList.add('in-view');
-          obs.disconnect();
-        }
-      }, { threshold: 0.15 });
-      obs.observe(headline);
-    }
+    // ── Word-by-word scroll reveal on .preview__headline ──
+    // Each word fades from dim (opacity 0.15, weight 200) to bright (opacity 1, weight 600)
+    // as the reading line passes through it while scrolling.
+    (function () {
+      const p = document.querySelector('.preview__headline');
+
+      // Wrap every word in a <span class="word">, preserving HTML tags (e.g. <br>)
+      p.innerHTML = p.innerHTML.replace(/(<[^>]+>)|(\S+)/g, (m, tag, word) =>
+        tag ? tag : `<span class="word">${word}</span>`
+      );
+
+      const words = Array.from(p.querySelectorAll('.word'));
+
+      function update() {
+        const readLine  = window.innerHeight * 0.62; // reading position: 62% from top
+        const fadeRange = window.innerHeight * 0.18; // distance over which transition happens
+
+        words.forEach(w => {
+          const mid  = w.getBoundingClientRect().top + w.offsetHeight / 2;
+          const dist = readLine - mid;                           // + = above line (read), − = below
+          const t    = Math.max(0, Math.min(1, dist / fadeRange + 0.5));
+
+          w.style.opacity    = 0.15 + t * 0.85;                 // 0.15 → 1
+          w.style.fontWeight = 200  + t * 400;                  // 200 → 600
+        });
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      // Run after fonts load so measurements are accurate
+      document.fonts.ready.then(() => update());
+    })();
   </script>
 
 </body>
