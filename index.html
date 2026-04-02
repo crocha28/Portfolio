@@ -365,7 +365,7 @@
                   height 0.3s cubic-bezier(0.4,0,0.2,1),
                   border-radius 0.3s cubic-bezier(0.4,0,0.2,1);
     }
-    .service:hover .service__thumb {
+    .service.is-open .service__thumb {
       width: 455px;
       height: 300px;
       border-radius: 24px;
@@ -393,7 +393,7 @@
       gap: 24px;
       padding: 24px 0;
     }
-    .service:hover .service__expand {
+    .service.is-open .service__expand {
       grid-template-rows: 1fr;
     }
 
@@ -442,7 +442,7 @@
       margin-top: 31px; /* (100px thumb - 38px arrow) / 2 */
       transition: margin-top 0.3s cubic-bezier(0.4,0,0.2,1);
     }
-    .service:hover .service__arrow {
+    .service.is-open .service__arrow {
       margin-top: 131px; /* (300px thumb - 38px arrow) / 2 */
     }
 
@@ -1062,7 +1062,23 @@
         });
       }
 
-      // Listen on both window and document — overflow-x:hidden on html+body
+      // ── Services accordion — opens on scroll ──
+    const serviceObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-open');
+        } else {
+          // collapse again when scrolled past
+          entry.target.classList.remove('is-open');
+        }
+      });
+    }, {
+      threshold: 0.35  // triggers when 35% of the row is visible
+    });
+
+    document.querySelectorAll('.service').forEach(s => serviceObserver.observe(s));
+
+    // Listen on both window and document — overflow-x:hidden on html+body
       // can shift the scroll container to body in some browsers
       window.addEventListener('scroll',   update, { passive: true });
       document.addEventListener('scroll', update, { passive: true });
