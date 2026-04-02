@@ -18,11 +18,15 @@
       --dur:   0.9s;
     }
 
-    html, body {
+    html {
       height: 100%;
+      overflow-x: hidden; /* clip horizontal overflow at the root */
+    }
+    body {
+      min-height: 100%;
       font-family: 'Manrope', sans-serif;
       background: var(--grey);
-      overflow-x: hidden;
+      /* NO overflow-x:hidden on body — keeps window as scroll container */
     }
 
     /* Propagate Manrope to every element (overrides browser UA fonts on inputs etc.) */
@@ -809,7 +813,10 @@
         });
       }
 
-      window.addEventListener('scroll', update, { passive: true });
+      // Listen on both window and document — overflow-x:hidden on html+body
+      // can shift the scroll container to body in some browsers
+      window.addEventListener('scroll',   update, { passive: true });
+      document.addEventListener('scroll', update, { passive: true });
       // Run after fonts load so measurements are accurate
       document.fonts.ready.then(() => update());
     })();
