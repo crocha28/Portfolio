@@ -536,10 +536,12 @@
     .preview__headline {
       width: 100%;
       font-size: clamp(24px, 3.89vw, 56px);
-      font-weight: 300;
+      font-weight: 200;        /* starts thin — JS drives it to 600 */
       color: #fff;
       text-align: right;
       line-height: 1.3;
+      opacity: 0;              /* starts invisible — JS drives it to 1 */
+      will-change: font-weight, opacity;
     }
 
     /* Bottom-right block: body text + button */
@@ -774,6 +776,25 @@
     });
 
     window.addEventListener('resize', fitCrocha, { passive: true });
+
+    // ── Headline: Fade-In to Bold on Scroll ──
+    // Manrope is a variable font → font-weight animates smoothly (200 → 600)
+    const headline = document.querySelector('.preview__headline');
+
+    function animateHeadline() {
+      const rect = headline.getBoundingClientRect();
+      const vh   = window.innerHeight;
+
+      // progress: 0 when element top hits 90% of viewport, 1 when it hits 20%
+      const raw      = (vh * 0.9 - rect.top) / (vh * 0.7);
+      const progress = Math.max(0, Math.min(1, raw));
+
+      headline.style.opacity    = progress;
+      headline.style.fontWeight = 200 + progress * 400; // 200 → 600
+    }
+
+    window.addEventListener('scroll', animateHeadline, { passive: true });
+    animateHeadline(); // run once on load in case already in view
   </script>
 
 </body>
