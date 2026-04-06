@@ -450,6 +450,137 @@
     }
 
     /* ════════════════════════════════════════
+       ABOUT SECTION
+    ════════════════════════════════════════ */
+    #about {
+      background: #858585;
+      padding: 0 64px 64px;
+      width: 100%;
+    }
+
+    /* header */
+    .about__rule {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.4);
+      margin: 0 -64px;
+    }
+    .about__meta {
+      display: flex;
+      justify-content: space-between;
+      padding: 21px 0 40px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+
+    /* body — relative container for absolute photo */
+    .about__body {
+      position: relative;
+      padding-top: 40px;
+    }
+
+    /* photo placeholder */
+    .about__photo {
+      position: absolute;
+      top: 40px;
+      left: calc(33% - 0px);
+      width: min(522px, 46%);
+      aspect-ratio: 522 / 619;
+      background: #d4d4d4;
+      border-radius: 16px;
+      z-index: 1;
+    }
+
+    /* location + tags */
+    .about__top {
+      position: relative;
+      z-index: 0;
+      width: 34%;
+      margin-bottom: 144px;
+    }
+    .about__location {
+      font-size: clamp(32px, 3.9vw, 56px);
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.2;
+      margin: 0 0 40px;
+    }
+    .about__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .about__tag {
+      border: 1px solid #fff;
+      border-radius: 100px;
+      padding: 8px 24px;
+      font-size: 14px;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: 0.04em;
+      cursor: default;
+    }
+
+    /* job titles */
+    .about__titles {
+      position: relative;
+      z-index: 0;
+    }
+    .about__role {
+      font-size: clamp(28px, 3.9vw, 56px);
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.2;
+      margin: 0 0 64px;
+    }
+    .about__role--right { text-align: right; }
+    .about__role--left  { text-align: left;  }
+    .about__bio-row {
+      display: flex;
+      justify-content: flex-end;
+      padding-bottom: 64px;
+    }
+    .about__bio {
+      max-width: 437px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* stats */
+    .about__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 64px;
+      margin-top: 80px;
+    }
+    .about__stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat__rule {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.5);
+      margin: 0 0 21px;
+    }
+    .stat__label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+    .stat__num {
+      font-size: clamp(64px, 8.9vw, 128px);
+      font-weight: 600;
+      color: #fff;
+      line-height: 1;
+    }
+
+    /* ════════════════════════════════════════
        PORTFOLIO SECTION  — white
     ════════════════════════════════════════ */
     .portfolio {
@@ -1010,6 +1141,61 @@
       </div>
 
     </div>
+  </section>
+
+  <!-- ═══ ABOUT ═══ -->
+  <section id="about">
+
+    <div class="about__header">
+      <hr class="about__rule">
+      <div class="about__meta">
+        <span>04</span>
+        <span>ABOUT</span>
+        <span>2026</span>
+      </div>
+    </div>
+
+    <div class="about__body">
+      <div class="about__photo"></div>
+
+      <div class="about__top">
+        <h2 class="about__location">LISBON,<br>PORTUGAL</h2>
+        <div class="about__tags">
+          <span class="about__tag">Brand Identity</span>
+          <span class="about__tag">UX/UI Design</span>
+          <span class="about__tag">Motion</span>
+          <span class="about__tag">Art Direction</span>
+          <span class="about__tag">Typography</span>
+        </div>
+      </div>
+
+      <div class="about__titles">
+        <p class="about__role about__role--right">GRAPHIC DESIGNER</p>
+        <p class="about__role about__role--left">UX/UI DESIGNER</p>
+        <div class="about__bio-row">
+          <p class="about__bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="about__stats">
+      <div class="about__stat">
+        <hr class="stat__rule">
+        <span class="stat__label">Years of Experience</span>
+        <span class="stat__num">2</span>
+      </div>
+      <div class="about__stat">
+        <hr class="stat__rule">
+        <span class="stat__label">Projects Delivered</span>
+        <span class="stat__num">15</span>
+      </div>
+      <div class="about__stat">
+        <hr class="stat__rule">
+        <span class="stat__label">Happy Clients</span>
+        <span class="stat__num">12</span>
+      </div>
+    </div>
+
   </section>
 
   <script>
