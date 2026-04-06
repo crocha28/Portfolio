@@ -454,20 +454,24 @@
     ════════════════════════════════════════ */
     #about {
       background: #858585;
-      padding: 0 64px 64px;
+      padding-bottom: 64px;
       width: 100%;
     }
 
-    /* header */
+    /* header — identical pattern to services */
+    .about__header {
+      padding-top: 64px;
+    }
     .about__rule {
       border: none;
-      border-top: 1px solid rgba(255,255,255,0.4);
-      margin: 0 -64px;
+      border-top: 1px solid rgba(255,255,255,0.25);
+      margin: 0 64px 21px;
     }
     .about__meta {
       display: flex;
       justify-content: space-between;
-      padding: 21px 0 40px;
+      align-items: center;
+      padding: 0 64px;
       font-size: 14px;
       font-weight: 400;
       color: #fff;
@@ -477,15 +481,15 @@
     /* body — relative container for absolute photo */
     .about__body {
       position: relative;
-      padding-top: 40px;
+      padding: 40px 64px 0;
     }
 
     /* photo placeholder */
     .about__photo {
       position: absolute;
       top: 40px;
-      left: calc(33% - 0px);
-      width: min(522px, 46%);
+      left: calc(64px + 30%);
+      width: min(522px, 42%);
       aspect-ratio: 522 / 619;
       background: #d4d4d4;
       border-radius: 16px;
@@ -556,6 +560,7 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 64px;
       margin-top: 80px;
+      padding: 0 64px;
     }
     .about__stat {
       display: flex;
