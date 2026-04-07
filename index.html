@@ -281,7 +281,7 @@
     .cta__button {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 0;
       text-decoration: none;
       cursor: pointer;
       overflow: hidden;
@@ -1362,7 +1362,7 @@
         btn.addEventListener('mouseenter', () => {
           const pillW  = pill.offsetWidth;
           const arrowW = arrow.offsetWidth;
-          const gap    = parseFloat(getComputedStyle(btn).gap) || 8;
+          const gap    = parseFloat(getComputedStyle(btn).gap) || 0;
           // arrow stops at container left edge (x=0), pill shifts right by arrowW+gap
           arrow.style.transform = `translateX(${-(pillW + gap)}px)`;
           pill.style.transform  = `translateX(${arrowW + gap}px)`;
