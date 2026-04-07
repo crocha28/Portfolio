@@ -266,57 +266,55 @@
       color: #000;
     }
 
+    /* Spring physics: stiffness 300, damping 20, mass 1.25
+       CSS approximation → cubic-bezier(0.22, 1.4, 0.36, 1) */
+    :root { --spring: cubic-bezier(0.22, 1.4, 0.36, 1); }
+
+    /* ── Shift Button — single pill container ── */
     .cta__button {
       display: inline-flex;
       align-items: center;
       gap: 0;
       text-decoration: none;
       cursor: pointer;
-    }
-
-    /* Spring physics: stiffness 300, damping 20, mass 1.25
-       CSS approximation → cubic-bezier(0.22, 1.4, 0.36, 1) */
-    :root { --spring: cubic-bezier(0.22, 1.4, 0.36, 1); }
-
-    /* text pill */
-    .btn__pill {
-      height: 41px;
-      padding: 8px 40px;
       background: #ffffff;
       border-radius: 100px;
+      padding: 4px 4px 4px 28px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* label — no own background */
+    .btn__pill {
       display: flex;
       align-items: center;
-      gap: 10px;
       transition: transform 0.5s var(--spring);
     }
     .btn__pill span {
       font-weight: 300;
-      font-size: 18px;
-      color: rgba(102,102,102,1);
+      font-size: 16px;
+      color: #000;
       white-space: nowrap;
       transition: color 0.2s ease;
     }
 
     /* arrow circle */
     .btn__arrow {
-      width: 38px; height: 38px;
+      width: 36px; height: 36px;
       border-radius: 100px;
-      background: #d9d9d9;
+      background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      margin-left: 16px;
       transition: transform 0.5s var(--spring), background 0.2s ease;
     }
-    .btn__arrow svg { width: 16px; height: 16px; }
-    .btn__arrow svg path { transition: stroke 0.2s ease; }
+    .btn__arrow svg { width: 14px; height: 14px; }
+    .btn__arrow svg path { stroke: #fff; transition: stroke 0.2s ease; }
 
-    /* ── Shift Button: arrow jumps from right → left of pill ── */
-    .cta__button { overflow: hidden; position: relative; }
-    .cta__button:hover .btn__pill span     { color: #000; }
-    .cta__button:hover .btn__arrow         { background: #000; }
-    .cta__button:hover .btn__arrow svg path { stroke: #fff; }
-    /* JS drives translateX values based on measured pill width */
+    /* hover states */
+    .cta__button:hover .btn__arrow { background: #000; }
 
     /* standalone arrow buttons (service, card-cta) */
     .service__arrow,
@@ -1360,9 +1358,9 @@
         btn.addEventListener('mouseenter', () => {
           const pillW  = pill.offsetWidth;
           const arrowW = arrow.offsetWidth;
-          // arrow travels left past the pill; pill shifts right to make room
-          arrow.style.transform = `translateX(${-(pillW + arrowW)}px)`;
-          pill.style.transform  = `translateX(${arrowW}px)`;
+          const gap    = parseInt(getComputedStyle(arrow).marginLeft) || 0;
+          arrow.style.transform = `translateX(${-(pillW + gap + arrowW)}px)`;
+          pill.style.transform  = `translateX(${arrowW + gap}px)`;
         });
         btn.addEventListener('mouseleave', () => {
           arrow.style.transform = 'translateX(0)';
