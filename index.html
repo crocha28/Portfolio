@@ -198,7 +198,6 @@
     .tagline__ticker {
       height: clamp(40px, 8.89vw, 128px);
       overflow: hidden;
-      line-height: 1;
     }
 
     /* scrolling inner list — 5 items (4 words + 1 duplicate for seamless loop) */
@@ -208,8 +207,14 @@
       animation: ticker 20s linear infinite;
     }
 
+    /* each word occupies exactly one slot — no bleed from adjacent words */
     .tagline__ticker-inner span {
-      display: block;
+      display: flex;
+      align-items: flex-end; /* baseline-like alignment */
+      flex-shrink: 0;
+      height: clamp(40px, 8.89vw, 128px);
+      overflow: hidden;
+      white-space: nowrap;
       font-weight: 400;
       font-size: clamp(40px, 8.89vw, 128px);
       line-height: 1;
