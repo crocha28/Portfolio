@@ -689,30 +689,26 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      /* enough scroll room for all cards to pass through */
     }
 
+    /* Each card is sticky — slides up and covers the one before it */
     .project {
       display: flex;
       flex-direction: column;
       gap: 16px;
       position: sticky;
       top: 80px;
-      /* each card sits slightly higher to reveal previous cards below */
-      margin-bottom: 32px;
       transform-origin: top center;
-      transition: transform 0.1s linear;
-      background: #fff;
-      border-radius: 16px;
-      padding: 24px 24px 16px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
       will-change: transform;
+      /* background matches section so it covers previous card cleanly */
+      background: #fff;
+      padding-top: 0;
     }
 
-    /* each card gets its z-index via nth-child so later ones sit on top */
-    .project:nth-child(1) { z-index: 1; }
-    .project:nth-child(2) { z-index: 2; }
-    .project:nth-child(3) { z-index: 3; }
+    /* Figma spacer offsets: card 1 & 3 = 179px, card 2 = 239px */
+    .project:nth-child(1) { z-index: 1; padding-top: 0; }
+    .project:nth-child(2) { z-index: 2; padding-top: 60px; } /* 239-179=60px extra */
+    .project:nth-child(3) { z-index: 3; padding-top: 0; }
 
     .project__image {
       width: 100%;
@@ -1318,18 +1314,16 @@
     // ── Portfolio card stacking scale ──
     (function() {
       const cards = Array.from(document.querySelectorAll('.project'));
-      const STICKY_TOP = 80; // matches CSS top value
-      const SCALE_STEP = 0.04; // each card behind shrinks 4%
+      const STICKY_TOP = 80;
 
       function updateStack() {
         cards.forEach((card, i) => {
           const rect = card.getBoundingClientRect();
-          // how far past the sticky point has this card been pushed?
-          const overlap = STICKY_TOP - rect.top;
-          if (overlap > 0) {
-            // cards stacked behind this one shrink slightly
-            const depth = overlap / card.offsetHeight;
-            const scale = 1 - Math.min(depth * SCALE_STEP, SCALE_STEP);
+          const stuck = STICKY_TOP - rect.top;
+          if (stuck > 0) {
+            // card is stuck — scale it down proportional to how much it's been covered
+            const progress = Math.min(stuck / (card.offsetHeight * 0.5), 1);
+            const scale = 1 - progress * 0.05; // max 5% scale-down
             card.style.transform = `scale(${scale.toFixed(4)})`;
           } else {
             card.style.transform = 'scale(1)';
