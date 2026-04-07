@@ -111,6 +111,12 @@
     .navbar.is-dark .nav-tab:hover .nav-tab__label { color: #fff; }
     .navbar.is-dark .status__text { color: rgba(255,255,255,0.7); }
 
+    /* CTA on dark hero: make circle and pill visible */
+    .hero .btn__arrow { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); }
+    .hero .btn__arrow svg path { stroke: #fff; }
+    .hero .btn__pill { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); }
+    .hero .btn__pill span { color: #fff; }
+
     .status__text {
       font-weight: 300;
       font-size: 16px; line-height: 21.856px; color: rgba(102,102,102,1); white-space: nowrap;
@@ -1356,8 +1362,9 @@
         btn.addEventListener('mouseenter', () => {
           const pillW  = pill.offsetWidth;
           const arrowW = arrow.offsetWidth;
-          const gap    = parseInt(getComputedStyle(arrow).marginLeft) || 0;
-          arrow.style.transform = `translateX(${-(pillW + gap + arrowW)}px)`;
+          const gap    = parseFloat(getComputedStyle(btn).gap) || 8;
+          // arrow stops at container left edge (x=0), pill shifts right by arrowW+gap
+          arrow.style.transform = `translateX(${-(pillW + gap)}px)`;
           pill.style.transform  = `translateX(${arrowW + gap}px)`;
         });
         btn.addEventListener('mouseleave', () => {
