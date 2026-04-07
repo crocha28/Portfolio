@@ -270,22 +270,23 @@
        CSS approximation → cubic-bezier(0.22, 1.4, 0.36, 1) */
     :root { --spring: cubic-bezier(0.22, 1.4, 0.36, 1); }
 
-    /* ── Shift Button — single pill container ── */
+    /* ── Shift Button — two separate elements, overflow clips animation ── */
     .cta__button {
       display: inline-flex;
       align-items: center;
-      gap: 0;
+      gap: 8px;
       text-decoration: none;
       cursor: pointer;
-      background: #ffffff;
-      border-radius: 100px;
-      padding: 4px 4px 4px 28px;
       overflow: hidden;
       position: relative;
     }
 
-    /* label — no own background */
+    /* text pill — has its own background */
     .btn__pill {
+      height: 44px;
+      padding: 0 28px;
+      background: #ffffff;
+      border-radius: 100px;
       display: flex;
       align-items: center;
       transition: transform 0.5s var(--spring);
@@ -298,23 +299,19 @@
       transition: color 0.2s ease;
     }
 
-    /* arrow circle */
+    /* arrow circle — separate element */
     .btn__arrow {
-      width: 36px; height: 36px;
+      width: 44px; height: 44px;
       border-radius: 100px;
       background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-left: 16px;
       transition: transform 0.5s var(--spring), background 0.2s ease;
     }
-    .btn__arrow svg { width: 14px; height: 14px; }
+    .btn__arrow svg { width: 16px; height: 16px; }
     .btn__arrow svg path { stroke: #fff; transition: stroke 0.2s ease; }
-
-    /* hover states */
-    .cta__button:hover .btn__arrow { background: #000; }
 
     /* standalone arrow buttons (service, card-cta) */
     .service__arrow,
