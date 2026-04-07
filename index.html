@@ -38,7 +38,7 @@
     ════════════════════════════════════════ */
     .navbar {
       position: fixed;
-      top: 12px;
+      top: 24px;
       left: calc(50% - 475.5px);
       width: 951px;
       height: 51px;
@@ -271,7 +271,7 @@
       font-weight: 200;
       font-size: 16px;
       line-height: 1.55;
-      color: #000;
+      color: #fff;
     }
 
     /* Spring physics: stiffness 300, damping 20, mass 1.25
@@ -1263,6 +1263,20 @@
   </section>
 
   <script>
+    // ── Hero card parallax ──
+    (function() {
+      const card = document.querySelector('.hero__card');
+      if (!card) return;
+      function updateParallax() {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const heroH   = document.getElementById('hero').offsetHeight;
+        if (scrollY > heroH) return;
+        card.style.transform = `translateY(${scrollY * 0.25}px)`;
+      }
+      window.addEventListener('scroll', updateParallax, { passive: true });
+      document.addEventListener('scroll', updateParallax, { passive: true });
+    })();
+
     // ── Navbar scroll ──
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
