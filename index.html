@@ -195,8 +195,10 @@
     }
 
     /* clip window — height == one line so overflow hides other words */
+    /* font-size lives here so spans can use em units */
     .tagline__ticker {
-      height: clamp(40px, 8.89vw, 128px);
+      font-size: clamp(40px, 8.89vw, 128px);
+      height: 1.15em;   /* 15% extra for descenders (p, g, y…) */
       overflow: hidden;
     }
 
@@ -207,16 +209,16 @@
       animation: ticker 20s linear infinite;
     }
 
-    /* each word occupies exactly one slot — no bleed from adjacent words */
+    /* each span = one slot, same height as container */
     .tagline__ticker-inner span {
       display: flex;
-      align-items: flex-end; /* baseline-like alignment */
+      align-items: flex-start; /* text sits at top of slot */
       flex-shrink: 0;
-      height: clamp(40px, 8.89vw, 128px);
-      overflow: hidden;
+      height: 1.15em;
+      overflow: visible;       /* let descenders breathe within their slot */
       white-space: nowrap;
       font-weight: 400;
-      font-size: clamp(40px, 8.89vw, 128px);
+      font-size: 1em;
       line-height: 1;
       color: #000;
     }
