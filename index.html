@@ -687,14 +687,31 @@
     .portfolio__projects {
       display: flex;
       flex-direction: column;
-      gap: 64px;
+      gap: 0;
+      /* enough scroll room for all cards to pass through */
     }
 
     .project {
       display: flex;
       flex-direction: column;
       gap: 16px;
+      position: sticky;
+      top: 80px;
+      /* each card sits slightly higher to reveal previous cards below */
+      margin-bottom: 32px;
+      transform-origin: top center;
+      transition: transform 0.1s linear;
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 24px 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+      will-change: transform;
     }
+
+    /* each card gets its z-index via nth-child so later ones sit on top */
+    .project:nth-child(1) { z-index: 1; }
+    .project:nth-child(2) { z-index: 2; }
+    .project:nth-child(3) { z-index: 3; }
 
     .project__image {
       width: 100%;
@@ -1295,6 +1312,33 @@
       document.addEventListener('scroll', update, { passive: true });
       // Run after fonts load so measurements are accurate
       document.fonts.ready.then(() => update());
+    })();
+
+    // ── Portfolio card stacking scale ──
+    (function() {
+      const cards = Array.from(document.querySelectorAll('.project'));
+      const STICKY_TOP = 80; // matches CSS top value
+      const SCALE_STEP = 0.04; // each card behind shrinks 4%
+
+      function updateStack() {
+        cards.forEach((card, i) => {
+          const rect = card.getBoundingClientRect();
+          // how far past the sticky point has this card been pushed?
+          const overlap = STICKY_TOP - rect.top;
+          if (overlap > 0) {
+            // cards stacked behind this one shrink slightly
+            const depth = overlap / card.offsetHeight;
+            const scale = 1 - Math.min(depth * SCALE_STEP, SCALE_STEP);
+            card.style.transform = `scale(${scale.toFixed(4)})`;
+          } else {
+            card.style.transform = 'scale(1)';
+          }
+        });
+      }
+
+      window.addEventListener('scroll', updateStack, { passive: true });
+      document.addEventListener('scroll', updateStack, { passive: true });
+      updateStack();
     })();
 
     // ── Count-up animation for stats ──
