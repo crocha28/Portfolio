@@ -279,6 +279,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      transition: transform 0.5s var(--spring);
     }
     .btn__pill span {
       font-weight: 300;
@@ -288,7 +289,7 @@
       transition: color 0.2s ease;
     }
 
-    /* arrow circle — scale 0→1 on hover (reveal), 1→0 on leave */
+    /* arrow circle */
     .btn__arrow {
       width: 38px; height: 38px;
       border-radius: 100px;
@@ -297,33 +298,26 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transform: scale(1);
-      transition: transform 0.45s var(--spring), background 0.2s ease;
+      transition: transform 0.5s var(--spring), background 0.2s ease;
     }
-    .btn__arrow svg {
-      width: 16px; height: 16px;
-    }
-    .btn__arrow svg path {
-      transition: stroke 0.2s ease;
-    }
+    .btn__arrow svg { width: 16px; height: 16px; }
+    .btn__arrow svg path { transition: stroke 0.2s ease; }
 
-    /* ── Shift Button animation: rotate -6° + arrow pops ── */
-    .cta__button {
-      transition: transform 0.45s var(--spring);
-    }
-    .cta__button:hover                     { transform: rotate(-6deg); }
+    /* ── Shift Button: arrow jumps from right → left of pill ── */
+    .cta__button { overflow: hidden; position: relative; }
     .cta__button:hover .btn__pill span     { color: #000; }
-    .cta__button:hover .btn__arrow         { transform: scale(0) rotate(6deg); background: #000; }
+    .cta__button:hover .btn__arrow         { background: #000; }
     .cta__button:hover .btn__arrow svg path { stroke: #fff; }
+    /* JS drives translateX values based on measured pill width */
 
     /* standalone arrow buttons (service, card-cta) */
     .service__arrow,
     .card-cta__arrow {
-      transition: transform 0.45s var(--spring);
+      transition: transform 0.5s var(--spring);
     }
     .service:hover .service__arrow,
     .card-cta:hover .card-cta__arrow {
-      transform: scale(1.15) rotate(-6deg);
+      transform: scale(1.12);
     }
 
     /* ════════════════════════════════════════
@@ -1341,6 +1335,27 @@
       document.addEventListener('scroll', update, { passive: true });
       // Run after fonts load so measurements are accurate
       document.fonts.ready.then(() => update());
+    })();
+
+    // ── Shift Button: arrow slides right→left on hover ──
+    (function() {
+      document.querySelectorAll('.cta__button').forEach(btn => {
+        const pill  = btn.querySelector('.btn__pill');
+        const arrow = btn.querySelector('.btn__arrow');
+        if (!pill || !arrow) return;
+
+        btn.addEventListener('mouseenter', () => {
+          const pillW  = pill.offsetWidth;
+          const arrowW = arrow.offsetWidth;
+          // arrow travels left past the pill; pill shifts right to make room
+          arrow.style.transform = `translateX(${-(pillW + arrowW)}px)`;
+          pill.style.transform  = `translateX(${arrowW}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          arrow.style.transform = 'translateX(0)';
+          pill.style.transform  = 'translateX(0)';
+        });
+      });
     })();
 
     // ── Portfolio card stacking scale ──
