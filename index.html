@@ -140,16 +140,12 @@
 
     /* ── "CROCHA" — background title, always edge-to-edge ── */
     .hero__title {
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      padding-top: 9.4%;   /* 85/900 — keeps text at original position */
+      left: 0;
+      top: 9.4%;
       font-weight: 600;
       font-size: 10px;   /* overridden by JS after font loads */
       line-height: 1;
-      background: url('assets/hero-gradient.png') center / cover no-repeat;
-      -webkit-background-clip: text; background-clip: text;
-      -webkit-text-fill-color: transparent; color: transparent;
-      filter: brightness(1.8) saturate(1.4) contrast(1.1);
+      color: rgba(255,255,255,1);
       white-space: nowrap;
       pointer-events: none;
       user-select: none;
