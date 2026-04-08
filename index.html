@@ -146,13 +146,15 @@
     /* helper: position elements as % of 1440 × 900 */
     .hero > * { position: absolute; }
 
-    /* ── CROCHA logo — always edge-to-edge ── */
+    /* ── CROCHA logo — gradient through SVG mask ── */
     .hero__title {
       left: 24px;
       top: 99px; /* navbar (24px + 51px) + 24px gap */
       width: calc(100% - 48px);
-      height: auto;
-      display: block;
+      aspect-ratio: 1016.04 / 214.36;
+      background: url('assets/hero-gradient.png') center / cover no-repeat;
+      -webkit-mask: url('assets/crocha-logo.svg') center / 100% 100% no-repeat;
+      mask: url('assets/crocha-logo.svg') center / 100% 100% no-repeat;
       opacity: 0.5;
       pointer-events: none;
       user-select: none;
@@ -920,7 +922,7 @@
   <section class="hero" id="hero">
 
     <!-- Background logo -->
-    <img class="hero__title" src="assets/crocha-logo.svg" alt="CROCHA">
+    <div class="hero__title" role="img" aria-label="CROCHA"></div>
 
     <!-- Info card -->
     <div class="hero__card">
