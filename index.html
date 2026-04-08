@@ -146,15 +146,14 @@
     /* helper: position elements as % of 1440 × 900 */
     .hero > * { position: absolute; }
 
-    /* ── "CROCHA" — background title, always edge-to-edge ── */
+    /* ── CROCHA logo — always edge-to-edge ── */
     .hero__title {
       left: 0;
       top: 9.4%;
-      font-weight: 600;
-      font-size: 10px;   /* overridden by JS after font loads */
-      line-height: 1;
-      color: rgba(255,255,255,0.5);
-      white-space: nowrap;
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0.5;
       pointer-events: none;
       user-select: none;
     }
@@ -920,8 +919,8 @@
   <!-- ── HERO ── -->
   <section class="hero" id="hero">
 
-    <!-- Background title -->
-    <h1 class="hero__title">CROCHA</h1>
+    <!-- Background logo -->
+    <img class="hero__title" src="assets/crocha-logo.svg" alt="CROCHA">
 
     <!-- Info card -->
     <div class="hero__card">
@@ -1267,24 +1266,7 @@
       navbar.classList.toggle('is-dark', entry.isIntersecting);
     }, { threshold: 0 }).observe(document.getElementById('hero'));
 
-    // ── CROCHA full-width fit ──
-    const title = document.querySelector('.hero__title');
-    const hero  = document.querySelector('.hero');
-
-    function fitCrocha() {
-      title.style.fontSize = '100px';
-      title.style.width = 'max-content'; // force true text width, not container width
-      const naturalWidth = title.getBoundingClientRect().width;
-      title.style.width = '';
-      title.style.fontSize = (100 * hero.clientWidth / naturalWidth) + 'px';
-    }
-
-    // Wait for Manrope to load before measuring — crucial for accuracy
-    document.fonts.ready.then(() => {
-      fitCrocha();
-    });
-
-    window.addEventListener('resize', fitCrocha, { passive: true });
+    // logo scales via CSS width: 100% — no JS needed
 
     // ── Word-by-word scroll reveal on .preview__headline ──
     // Character-by-character scroll reveal — each char permanently reveals (dim → bright, stays bright)
