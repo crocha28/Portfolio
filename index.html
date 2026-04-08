@@ -895,12 +895,11 @@
       line-height: 1.4;
     }
 
-    /* Each word is individually driven by scroll */
-    .preview__headline .word {
+    /* Each character is individually driven by scroll — 3-state colour */
+    .preview__headline .char {
       display: inline;
-      opacity: 0.15;
-      font-weight: 200;
-      will-change: opacity, font-weight;
+      color: rgba(255,255,255,0.15); /* not-yet */
+      will-change: color;
     }
 
     /* Bottom-right block: body text + button */
@@ -1308,29 +1307,39 @@
     window.addEventListener('resize', fitCrocha, { passive: true });
 
     // ── Word-by-word scroll reveal on .preview__headline ──
-    // Each word fades from dim (opacity 0.15, weight 200) to bright (opacity 1, weight 600)
-    // as the reading line passes through it while scrolling.
+    // Character-by-character scroll reveal — each char permanently reveals (dim → bright, stays bright)
+    // Mirrors td-alexfolio: progress = how far the element top has moved up through the viewport
+    // start: element top at 75% of viewport → progress 0
+    // end:   element top at 35% of viewport → progress 1
     (function () {
       const p = document.querySelector('.preview__headline');
 
-      // Wrap every word in a <span class="word">, preserving HTML tags (e.g. <br>)
-      p.innerHTML = p.innerHTML.replace(/(<[^>]+>)|(\S+)/g, (m, tag, word) =>
-        tag ? tag : `<span class="word">${word}</span>`
+      // Wrap each non-space character in a .char span, preserve <br>
+      p.innerHTML = p.innerHTML.replace(/(<br\s*\/?>)|([^\s<])/g, (m, br, char) =>
+        br ? br : `<span class="char">${char}</span>`
       );
 
-      const words = Array.from(p.querySelectorAll('.word'));
+      const chars = Array.from(p.querySelectorAll('.char'));
+      const total = chars.length;
 
       function update() {
-        const readLine  = window.innerHeight * 0.62; // reading position: 62% from top
-        const fadeRange = window.innerHeight * 0.18; // distance over which transition happens
+        const rect     = p.getBoundingClientRect();
+        const vh       = window.innerHeight;
+        // scrollProgress: 0 when top of block is at 75vh, 1 when at 35vh
+        const progress = Math.max(0, Math.min(1, (0.75 - rect.top / vh) / (0.75 - 0.35)));
 
-        words.forEach(w => {
-          const mid  = w.getBoundingClientRect().top + w.offsetHeight / 2;
-          const dist = readLine - mid;                           // + = above line (read), − = below
-          const t    = Math.max(0, Math.min(1, dist / fadeRange + 0.5));
-
-          w.style.opacity    = 0.15 + t * 0.85;                 // 0.15 → 1
-          w.style.fontWeight = 200  + t * 400;                  // 200 → 600
+        chars.forEach((c, i) => {
+          const charStart = i / total;
+          const charEnd   = (i + 1) / total;
+          let alpha;
+          if (progress <= charStart) {
+            alpha = 0.15;                                          // not yet revealed
+          } else if (progress >= charEnd) {
+            alpha = 1.0;                                           // fully revealed — stays bright
+          } else {
+            alpha = 0.15 + ((progress - charStart) / (charEnd - charStart)) * 0.85; // transition
+          }
+          c.style.color = `rgba(255,255,255,${alpha.toFixed(3)})`;
         });
       }
 
