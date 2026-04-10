@@ -711,16 +711,17 @@
       gap: 16px;
       position: sticky;
       top: 80px;
-      transform-origin: top center;
       will-change: transform;
-      /* background matches section so it covers previous card cleanly */
       background: #fff;
       padding-top: 0;
+      border-radius: 12px;
+      overflow: hidden;
     }
 
-    .project:nth-child(1) { z-index: 1; }
-    .project:nth-child(2) { z-index: 2; }
-    .project:nth-child(3) { z-index: 3; }
+    /* Staggered tops: each card sticks 40px lower → "fanned deck" effect */
+    .project:nth-child(1) { top: 80px;  z-index: 1; }
+    .project:nth-child(2) { top: 120px; z-index: 2; }
+    .project:nth-child(3) { top: 160px; z-index: 3; }
 
     .project__image {
       width: 100%;
@@ -1363,29 +1364,6 @@
       });
     })();
 
-    // ── Portfolio card stacking scale ──
-    (function() {
-      const cards = Array.from(document.querySelectorAll('.project'));
-      const STICKY_TOP = 80;
-
-      function updateStack() {
-        cards.forEach((card, i) => {
-          const next = cards[i + 1];
-          if (!next) { card.style.transform = 'scale(1)'; return; }
-          const nextRect = next.getBoundingClientRect();
-          const cardRect = card.getBoundingClientRect();
-          // How far has the next card risen over this card (0 = not yet, 1 = fully covered)
-          const overlap = cardRect.bottom - nextRect.top;
-          const progress = Math.max(0, Math.min(overlap / card.offsetHeight, 1));
-          const scale = 1 - progress * 0.05; // subtle 5% scale-down as card gets covered
-          card.style.transform = `scale(${scale.toFixed(4)})`;
-        });
-      }
-
-      window.addEventListener('scroll', updateStack, { passive: true });
-      document.addEventListener('scroll', updateStack, { passive: true });
-      updateStack();
-    })();
 
     // ── Count-up animation for stats ──
     (function() {
