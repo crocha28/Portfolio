@@ -629,7 +629,7 @@
     ════════════════════════════════════════ */
     .portfolio {
       background: #fff;
-      padding: 64px 64px 120px;
+      padding: 0 64px;
       width: 100%;
     }
 
@@ -637,7 +637,8 @@
       display: flex;
       flex-direction: column;
       gap: 21px;
-      margin-bottom: 120px;
+      padding-top: 64px;
+      margin-bottom: 0;
     }
 
     .portfolio__rule {
@@ -655,19 +656,18 @@
       color: #000;
     }
 
-    /* 3-column main grid */
-    .portfolio__body {
-      display: grid;
-      grid-template-columns: 182px 1fr 225px;
-      column-gap: 103px;
-      align-items: start;
+    /* Full-viewport intro frame — stays pinned while cards scroll up */
+    .portfolio__intro {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 0;
     }
 
-    /* Left editorial — sticky so it stays while cards scroll */
+    /* Editorial: centred inside the intro frame */
     .portfolio__editorial {
-      position: sticky;
-      top: calc(50vh - 49px);
-      align-self: center;
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -757,10 +757,9 @@
     .project__name { font-size: 14px; font-weight: 400; color: #000; }
     .project__sub  { font-size: 12px; font-weight: 400; color: #909090; }
 
-    /* Right: image preview card — sticky so it stays while cards scroll */
+    /* CTA below the cards */
     .portfolio__card-cta {
-      position: sticky;
-      top: calc(50vh - 54px);
+      padding: 60px 0 120px;
       align-self: center;
     }
 
@@ -1014,9 +1013,8 @@
       </div>
     </header>
 
-    <div class="portfolio__body">
-
-      <!-- Left: editorial text + CTA -->
+    <!-- Full-viewport intro: editorial centred, pinned while cards scroll up -->
+    <div class="portfolio__intro">
       <div class="portfolio__editorial">
         <h2 class="editorial__title">Lorem</h2>
         <a href="#portfolio" class="editorial__link">
@@ -1026,9 +1024,10 @@
           </svg>
         </a>
       </div>
+    </div>
 
-      <!-- Centre: 3 stacked project cards -->
-      <div class="portfolio__projects">
+    <!-- Cards scroll up from below and stack over the intro -->
+    <div class="portfolio__projects">
         <div class="project">
           <div class="project__image"></div>
           <div class="project__caption">
@@ -1064,21 +1063,19 @@
         </div>
       </div>
 
-      <!-- Right: image preview card -->
-      <div class="portfolio__card-cta">
-        <div class="card-cta">
-          <div class="card-cta__thumb"></div>
-          <div class="card-cta__actions">
-            <div class="btn__arrow">
-              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3.5 12.5L12.5 3.5M12.5 3.5H6M12.5 3.5V10" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <span class="card-cta__label">See all <sup>(03)</sup></span>
+    <!-- CTA below stacked cards -->
+    <div class="portfolio__card-cta">
+      <div class="card-cta">
+        <div class="card-cta__thumb"></div>
+        <div class="card-cta__actions">
+          <div class="btn__arrow">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3.5 12.5L12.5 3.5M12.5 3.5H6M12.5 3.5V10" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
+          <span class="card-cta__label">See all <sup>(03)</sup></span>
         </div>
       </div>
-
     </div>
 
   </section>
